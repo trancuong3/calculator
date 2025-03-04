@@ -73,9 +73,9 @@ public class Calculator extends JFrame implements ActionListener {
     }
 
     private double calculate(double a, double b, String op) {
-        switch (op) {
-            case "-": return a - b;
-            case "*": return a * b;
+                switch (op) {
+                     case "-": return a - b;
+                        case "*": return a * b;
 
             default: return 0;
         }
