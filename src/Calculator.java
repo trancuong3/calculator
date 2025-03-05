@@ -4,36 +4,36 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Calculator extends JFrame implements ActionListener {
-    private JTextField display;
-    private String operator = "";
-    private double num1 = 0, num2 = 0;
-    private boolean isOperatorClicked = false;
+    private JTextField screen;
+    private String currentOperator = "";
+    private double firstNumber = 0, secondNumber = 0;
+    private boolean operatorPressed = false;
 
     public Calculator() {
-        setTitle("Calc");
+        setTitle("Calculator");
         setSize(200, 300);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setLayout(new FlowLayout());
         setResizable(true);
 
-        display = new JTextField(5);
-        display.setEditable(true);
-        display.setHorizontalAlignment(JTextField.LEFT);
-        display.setFont(new Font("Arial", Font.PLAIN, 10));
-        add(display);
+        screen = new JTextField(5);
+        screen.setEditable(true);
+        screen.setHorizontalAlignment(JTextField.LEFT);
+        screen.setFont(new Font("Arial", Font.PLAIN, 10));
+        add(screen);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 3));
 
-        String[] buttons = {
+        String[] buttonLabels = {
                 "7", "8", "9", "/",
                 "4", "5", "6", "*",
                 "1", "2", "3", "-",
                 "0", "C", "="
         };
 
-        for (String text : buttons) {
-            JButton button = new JButton(text);
+        for (String label : buttonLabels) {
+            JButton button = new JButton(label);
             button.setFont(new Font("Arial", Font.PLAIN, 10));
             button.setBackground(Color.GRAY);
             button.addActionListener(this);
@@ -46,37 +46,36 @@ public class Calculator extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
+        String actionCommand = e.getActionCommand();
 
-        if (command.matches("[0-9]") || command.equals(".")) {
-            if (isOperatorClicked) {
-                display.setText("");
-                isOperatorClicked = false;
+        if (actionCommand.matches("[0-9]") || actionCommand.equals(".")) {
+            if (operatorPressed) {
+                screen.setText("");
+                operatorPressed = false;
             }
-            display.setText(display.getText() + command);
-        } else if (command.equals("C")) {
-            display.setText("0");
-            num1 = num2 = 0;
-            operator = "";
-        } else if (command.equals("=")) {
-            if (!operator.isEmpty() && !display.getText().isEmpty()) {
-                num2 = Double.parseDouble(display.getText());
-                double result = calculate(num1, num2, operator);
-                display.setText(String.valueOf(result));
-                operator = "";
+            screen.setText(screen.getText() + actionCommand);
+        } else if (actionCommand.equals("C")) {
+            screen.setText("0");
+            firstNumber = secondNumber = 0;
+            currentOperator = "";
+        } else if (actionCommand.equals("=")) {
+            if (!currentOperator.isEmpty() && !screen.getText().isEmpty()) {
+                secondNumber = Double.parseDouble(screen.getText());
+                double result = performCalculation(firstNumber, secondNumber, currentOperator);
+                screen.setText(String.valueOf(result));
+                currentOperator = "";
             }
         } else {
-            num1 = Double.parseDouble(display.getText());
-            operator = command;
-            isOperatorClicked = true;
+            firstNumber = Double.parseDouble(screen.getText());
+            currentOperator = actionCommand;
+            operatorPressed = true;
         }
     }
 
-    private double calculate(double a, double b, String op) {
-                switch (op) {
-                     case "-": return a - b;
-                        case "*": return a * b;
-
+    private double performCalculation(double a, double b, String op) {
+        switch (op) {
+            case "-": return a - b;
+            case "*": return a * b;
             default: return 0;
         }
     }
